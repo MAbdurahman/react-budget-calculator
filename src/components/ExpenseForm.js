@@ -2,12 +2,39 @@
             ExpenseForm.js
 ===========================================*/
 import React from 'react';
+import { MdSend } from "react-icons/md";
+
 
 const ExpenseForm = () => {
    return (
-      <div>
-         <h2>ExpressForm.js</h2>
-      </div>
+         <form>
+         <div className="form-center">
+            <div className="form-group">
+               <label htmlFor="nameOfExpense">expense</label>
+               <input
+                  type="text"
+                  className="form-control"
+                  id="nameOfExpense"
+                  name="nameOfExpense"
+                  placeholder="e.g. name of expense"
+               />
+            </div>
+            <div className="form-group">
+               <label htmlFor="amount">amount</label>
+               <input
+                  type="text"
+                  className="form-control"
+                  id="amount"
+                  name="amount"
+                  placeholder="e.g. expense amount"
+               />
+            </div>
+         </div>
+         <button type="submit" className="btn">
+            submit
+        <MdSend className="btn-icon" />
+         </button>
+         </form>
    );
 };
 

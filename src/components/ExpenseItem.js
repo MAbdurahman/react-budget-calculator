@@ -2,12 +2,25 @@
             components/ExpenseItem.js
 ===========================================*/
 import React from 'react';
+import { MdEdit, MdDelete } from "react-icons/md";
 
-const ExpenseItem = () => {
+const ExpenseItem = ({expense}) => {
+   const { id, nameOfExpense, amount } = expense;
    return (
-      <div>
-         <h2>ExpressItem.js</h2>
-      </div>
+      <li className="item">
+         <div className="info">
+            <span className="expense">{nameOfExpense}</span>
+            <span className="amount">${amount}</span>
+         </div>
+         <div>
+            <button className="edit-btn" aria-label="edit button">
+               <MdEdit />
+            </button>
+            <button className="clear-btn" aria-label="delete button">
+               <MdDelete />
+            </button>
+         </div>
+      </li>
    );
 };
 

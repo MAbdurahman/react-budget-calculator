@@ -9,9 +9,9 @@ import uuid from 'uuid/dist/v4';
 import './App.css';
 
 const initialExpenses = [
-	{ id: uuid(), charge: 'rent', amount: 1600 },
-	{ id: uuid(), charge: 'food', amount: 500 },
-	{ id: uuid(), charge: 'car', amount: 900 },
+	{ id: uuid(), nameOfExpense: 'rent', amount: 1600 },
+	{ id: uuid(), nameOfExpense: 'food', amount: 500 },
+	{ id: uuid(), nameOfExpense: 'car', amount: 900 },
 ];
 
 
