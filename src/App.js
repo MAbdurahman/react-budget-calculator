@@ -1,17 +1,47 @@
 /*===========================================
-            App.js
+				App.js
 ===========================================*/
-import React from 'react';
+import React, { useState } from 'react';
+import Alert from './components/Alert';
+import ExpenseList from './components/ExpenseList';
+import ExpenseForm from './components/ExpenseForm';
+import uuid from 'uuid/dist/v4';
 import './App.css';
 
+const initialExpenses = [
+	{ id: uuid(), charge: 'rent', amount: 1600 },
+	{ id: uuid(), charge: 'food', amount: 500 },
+	{ id: uuid(), charge: 'car', amount: 900 },
+];
+
+
 function App() {
-  return (
+
+	const [expenses, setExpenses] = useState(initialExpenses);
+
+
+	return (
 		<>
+			<Alert />
 			<div>
-				<h2>react-budget-calculator</h2>
+				<h1>react-budget-calculator</h1>
 			</div>
+			<main className="App">
+				<ExpenseForm />
+				<ExpenseList expenses={expenses} />
+			</main>
+			<h1>
+				total spending :{" "}
+				<span className="total">
+					$
+            {expenses.reduce((acc, curr) => {
+					return (acc += curr.amount);
+				}, 0)}
+				</span>
+			</h1>
+
 		</>
-  );
+	);
 };
 
 export default App;
