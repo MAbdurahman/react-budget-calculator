@@ -17,17 +17,68 @@ const initialExpenses = [
 
 function App() {
 
+//**************** State Values ****************//
 	const [expenses, setExpenses] = useState(initialExpenses);
+	const [nameOfExpense, setNameOfExpense] = useState('');
+	const [amount, setAmount] = useState('');
+	const [alert, setAlert] = useState({isShowing:false})
 
+
+	//**************** Functionality ****************//
+	const handleNameOfExpense = e => {
+		// console.log(`nameOfExpense: ${e.target.value}`);
+		setNameOfExpense(e.target.value);
+	}
+	
+	const handleAmount = e => {
+		// console.log(`amount: ${e.target.value}`);
+		setAmount(e.target.value);
+	}
+
+	const handleAlert = ({type, text}) => {
+		setAlert({isShowing:true, type, text});
+		setTimeout(() => {
+			setAlert({isShowing: false });
+		}, 3000);
+
+	};
+
+	const handleSubmit = e => {
+		e.preventDefault();
+		// console.log(nameOfExpense, amount);
+		if ( nameOfExpense !== '' && amount > 0) {
+			const singleExpense = {id:uuid(), nameOfExpense, amount};
+			setExpenses([...expenses, singleExpense]);
+			setNameOfExpense('');
+			setAmount('');
+			handleAlert({type:'success', text:'item added'})
+
+		} else if (nameOfExpense === '') {
+			handleAlert({ type: 'danger', text: 'Name of expense cannot be empty!' });
+
+		} else {
+			handleAlert({ type: 'danger', text: 'expense amount must be greater than zero!' });
+			
+		}
+
+
+	}
 
 	return (
 		<>
+		{alert.isShowing && <Alert type={alert.type} text={alert.text}/>}
 			<Alert />
 			<div>
 				<h1>react-budget-calculator</h1>
 			</div>
 			<main className="App">
-				<ExpenseForm />
+				<ExpenseForm 
+				nameOfExpense={nameOfExpense}
+				amount={amount}
+				handleAmount={handleAmount}
+				handleNameOfExpense={handleNameOfExpense}
+				handleSubmit={handleSubmit}
+				/>
 				<ExpenseList expenses={expenses} />
 			</main>
 			<h1>
@@ -35,11 +86,10 @@ function App() {
 				<span className="total">
 					$
             {expenses.reduce((acc, curr) => {
-					return (acc += curr.amount);
+					return (acc += parseInt(curr.amount));
 				}, 0)}
 				</span>
 			</h1>
-
 		</>
 	);
 };
