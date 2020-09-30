@@ -17,11 +17,11 @@ const initialExpenses = [
 
 function App() {
 
-//**************** State Values ****************//
+	//**************** State Values ****************//
 	const [expenses, setExpenses] = useState(initialExpenses);
 	const [nameOfExpense, setNameOfExpense] = useState('');
 	const [amount, setAmount] = useState('');
-	const [alert, setAlert] = useState({isShowing:false})
+	const [alert, setAlert] = useState({ isShowing: false })
 
 
 	//**************** Functionality ****************//
@@ -29,57 +29,75 @@ function App() {
 		// console.log(`nameOfExpense: ${e.target.value}`);
 		setNameOfExpense(e.target.value);
 	}
-	
+
 	const handleAmount = e => {
 		// console.log(`amount: ${e.target.value}`);
 		setAmount(e.target.value);
 	}
 
-	const handleAlert = ({type, text}) => {
-		setAlert({isShowing:true, type, text});
+	const handleAlert = ({ type, text }) => {
+		setAlert({ isShowing: true, type, text });
 		setTimeout(() => {
-			setAlert({isShowing: false });
+			setAlert({ isShowing: false });
 		}, 3000);
 
+	};
+
+	const handleDelete = id => {
+		// console.log(`expense item deleted: ${id}`);
+		
+	};
+
+	const handleEdit = id => {
+		console.log(`expense item edited: ${id}`);
+	};
+
+	const clearAllExpenses = () => {
+		// console.log('cleared all expenses');
+		setExpenses([]);
 	};
 
 	const handleSubmit = e => {
 		e.preventDefault();
 		// console.log(nameOfExpense, amount);
-		if ( nameOfExpense !== '' && amount > 0) {
-			const singleExpense = {id:uuid(), nameOfExpense, amount};
+		if (nameOfExpense !== '' && amount > 0) {
+			const singleExpense = { id: uuid(), nameOfExpense, amount };
 			setExpenses([...expenses, singleExpense]);
 			setNameOfExpense('');
 			setAmount('');
-			handleAlert({type:'success', text:'item added'})
+			handleAlert({ type: 'success', text: 'expense added 👌' })
 
 		} else if (nameOfExpense === '') {
-			handleAlert({ type: 'danger', text: 'Name of expense cannot be empty!' });
+			handleAlert({ type: 'danger', text: 'name of expense cannot be empty 😒!' });
 
 		} else {
-			handleAlert({ type: 'danger', text: 'expense amount must be greater than zero!' });
-			
+			handleAlert({ type: 'danger', text: 'expense amount must be greater than zero 🤔!' });
+
 		}
+	};
 
 
-	}
 
 	return (
 		<>
-		{alert.isShowing && <Alert type={alert.type} text={alert.text}/>}
+			{alert.isShowing && <Alert type={alert.type} text={alert.text} />}
 			<Alert />
 			<div>
 				<h1>react-budget-calculator</h1>
 			</div>
 			<main className="App">
-				<ExpenseForm 
-				nameOfExpense={nameOfExpense}
-				amount={amount}
-				handleAmount={handleAmount}
-				handleNameOfExpense={handleNameOfExpense}
-				handleSubmit={handleSubmit}
+				<ExpenseForm
+					nameOfExpense={nameOfExpense}
+					amount={amount}
+					handleAmount={handleAmount}
+					handleNameOfExpense={handleNameOfExpense}
+					handleSubmit={handleSubmit}
 				/>
-				<ExpenseList expenses={expenses} />
+				<ExpenseList 
+				expenses={expenses}
+				handleDelete={handleDelete}
+				handleEdit={handleEdit} 
+				clearAllExpenses={clearAllExpenses}/>
 			</main>
 			<h1>
 				total spending :{" "}
