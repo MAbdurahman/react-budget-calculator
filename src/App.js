@@ -46,8 +46,10 @@ function App() {
 	const handleDelete = id => {
 		// console.log(`expense item deleted: ${id}`);
 		let tempExpenses = expenses.filter(expense => expense.id !== id);
+		let expenseItem = expenses.find(expense => expense.id === id);
+		let {nameOfExpense} = expenseItem;
 		setExpenses(tempExpenses);
-		handleAlert({type:'danger', text:'expense item deleted!'})
+		handleAlert({type:'danger', text:`${nameOfExpense} expense deleted!`});
 
 	};
 
@@ -68,9 +70,10 @@ function App() {
 		if (nameOfExpense !== '' && amount > 0) {
 			const singleExpense = { id: uuid(), nameOfExpense, amount };
 			setExpenses([...expenses, singleExpense]);
+			handleAlert({ type: 'success', text: `${nameOfExpense} expense added 👌` });
 			setNameOfExpense('');
 			setAmount('');
-			handleAlert({ type: 'success', text: 'expense added 👌' })
+			// handleAlert({ type: 'success', text: 'expense added 👌' });
 
 		} else if (nameOfExpense === '') {
 			handleAlert({ type: 'danger', text: 'name of expense cannot be empty 😒!' });
