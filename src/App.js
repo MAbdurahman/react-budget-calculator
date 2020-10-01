@@ -8,12 +8,14 @@ import ExpenseForm from './components/ExpenseForm';
 import uuid from 'uuid/dist/v4';
 import './App.css';
 
-const initialExpenses = [
+/* const initialExpenses = [
 	{ id: uuid(), nameOfExpense: 'rent', amount: 1600 },
 	{ id: uuid(), nameOfExpense: 'food', amount: 500 },
 	{ id: uuid(), nameOfExpense: 'car', amount: 900 },
-];
+]; */
 
+const initialExpenses = 
+ localStorage.getItem('expenses') ? JSON.parse.localStorage.getItem('express') : [];
 
 function App() {
 
@@ -21,8 +23,9 @@ function App() {
 	const [expenses, setExpenses] = useState(initialExpenses);
 	const [nameOfExpense, setNameOfExpense] = useState('');
 	const [amount, setAmount] = useState('');
-	const [alert, setAlert] = useState({ isShowing: false })
-
+	const [alert, setAlert] = useState({ isShowing: false });
+	const [edit, setEdit] = useState(false);
+	const [id, setId] = useState(0);
 
 	//**************** Functionality ****************//
 	const handleNameOfExpense = e => {
@@ -47,14 +50,21 @@ function App() {
 		// console.log(`expense item deleted: ${id}`);
 		let tempExpenses = expenses.filter(expense => expense.id !== id);
 		let expenseItem = expenses.find(expense => expense.id === id);
-		let {nameOfExpense} = expenseItem;
+		let { nameOfExpense } = expenseItem;
 		setExpenses(tempExpenses);
-		handleAlert({type:'danger', text:`${nameOfExpense} expense deleted!`});
+		handleAlert({ type: 'danger', text: `${nameOfExpense} expense deleted!` });
 
 	};
 
 	const handleEdit = id => {
-		console.log(`expense item edited: ${id}`);
+		// console.log(`expense item edited: ${id}`);
+		let expenseItem = expenses.find(expense => expense.id === id);
+		let {nameOfExpense, amount} = expenseItem;
+		setNameOfExpense(nameOfExpense);
+		setAmount(amount);
+		setEdit(true);
+		setId(id);
+
 	};
 
 	const clearAllExpenses = () => {
@@ -68,9 +78,26 @@ function App() {
 		e.preventDefault();
 		// console.log(nameOfExpense, amount);
 		if (nameOfExpense !== '' && amount > 0) {
-			const singleExpense = { id: uuid(), nameOfExpense, amount };
-			setExpenses([...expenses, singleExpense]);
-			handleAlert({ type: 'success', text: `${nameOfExpense} expense added 👌` });
+
+			if (edit) {
+				let tempExpenses = expenses.map(expense => {
+					return expense.id === id ? {...expense, nameOfExpense, amount} : expense;
+				});
+
+				let tempExpenseItem = expenses.find(expense => expense.id === id);
+			
+				setExpenses(tempExpenses);
+				handleAlert({ type: 'success', text: `${tempExpenseItem.nameOfExpense} has been edited` });
+				setEdit(false);
+				
+			} else {
+
+				const singleExpense = { id: uuid(), nameOfExpense, amount };
+				setExpenses([...expenses, singleExpense]);
+				handleAlert({ type: 'success', text: `${nameOfExpense} expense added 👌` });
+
+			}
+
 			setNameOfExpense('');
 			setAmount('');
 			// handleAlert({ type: 'success', text: 'expense added 👌' });
@@ -83,8 +110,6 @@ function App() {
 
 		}
 	};
-
-
 
 	return (
 		<>
@@ -100,12 +125,13 @@ function App() {
 					handleAmount={handleAmount}
 					handleNameOfExpense={handleNameOfExpense}
 					handleSubmit={handleSubmit}
+					edit={edit}
 				/>
-				<ExpenseList 
-				expenses={expenses}
-				handleDelete={handleDelete}
-				handleEdit={handleEdit} 
-				clearAllExpenses={clearAllExpenses}/>
+				<ExpenseList
+					expenses={expenses}
+					handleDelete={handleDelete}
+					handleEdit={handleEdit}
+					clearAllExpenses={clearAllExpenses} />
 			</main>
 			<h1>
 				total spending :{" "}
