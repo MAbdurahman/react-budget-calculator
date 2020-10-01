@@ -1,21 +1,15 @@
 /*===========================================
 				App.js
 ===========================================*/
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Alert from './components/Alert';
 import ExpenseList from './components/ExpenseList';
 import ExpenseForm from './components/ExpenseForm';
 import uuid from 'uuid/dist/v4';
 import './App.css';
 
-/* const initialExpenses = [
-	{ id: uuid(), nameOfExpense: 'rent', amount: 1600 },
-	{ id: uuid(), nameOfExpense: 'food', amount: 500 },
-	{ id: uuid(), nameOfExpense: 'car', amount: 900 },
-]; */
-
-const initialExpenses = 
- localStorage.getItem('expenses') ? JSON.parse.localStorage.getItem('express') : [];
+const initialExpenses =
+	localStorage.getItem('expenses') ? JSON.parse.localStorage.getItem('expenses') : [];
 
 function App() {
 
@@ -26,6 +20,11 @@ function App() {
 	const [alert, setAlert] = useState({ isShowing: false });
 	const [edit, setEdit] = useState(false);
 	const [id, setId] = useState(0);
+
+	//**************** Hook - UseEffect ****************//
+	useEffect(() => {
+		localStorage.setItem('expenses', JSON.stringify(expenses));
+	}, [expenses]);
 
 	//**************** Functionality ****************//
 	const handleNameOfExpense = e => {
@@ -59,7 +58,7 @@ function App() {
 	const handleEdit = id => {
 		// console.log(`expense item edited: ${id}`);
 		let expenseItem = expenses.find(expense => expense.id === id);
-		let {nameOfExpense, amount} = expenseItem;
+		let { nameOfExpense, amount } = expenseItem;
 		setNameOfExpense(nameOfExpense);
 		setAmount(amount);
 		setEdit(true);
@@ -81,32 +80,29 @@ function App() {
 
 			if (edit) {
 				let tempExpenses = expenses.map(expense => {
-					return expense.id === id ? {...expense, nameOfExpense, amount} : expense;
+					return expense.id === id ? { ...expense, nameOfExpense, amount } : expense;
 				});
-
 				let tempExpenseItem = expenses.find(expense => expense.id === id);
-			
 				setExpenses(tempExpenses);
 				handleAlert({ type: 'success', text: `${tempExpenseItem.nameOfExpense} has been edited` });
 				setEdit(false);
-				
+
 			} else {
 
 				const singleExpense = { id: uuid(), nameOfExpense, amount };
 				setExpenses([...expenses, singleExpense]);
-				handleAlert({ type: 'success', text: `${nameOfExpense} expense added 👌` });
+				handleAlert({ type: 'success', text: `${nameOfExpense} expense added` });
 
 			}
 
 			setNameOfExpense('');
 			setAmount('');
-			// handleAlert({ type: 'success', text: 'expense added 👌' });
 
 		} else if (nameOfExpense === '') {
-			handleAlert({ type: 'danger', text: 'name of expense cannot be empty 😒!' });
+			handleAlert({ type: 'danger', text: 'name of expense cannot be empty!' });
 
 		} else {
-			handleAlert({ type: 'danger', text: 'expense amount must be greater than zero 🤔!' });
+			handleAlert({ type: 'danger', text: 'expense amount must be greater than zero!' });
 
 		}
 	};
