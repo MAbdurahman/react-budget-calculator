@@ -9,7 +9,8 @@ import uuid from 'uuid/dist/v4';
 import './App.css';
 
 const initialExpenses =
-	localStorage.getItem('expenses') ? JSON.parse.localStorage.getItem('expenses') : [];
+	localStorage.getItem('expenses') ? 
+	JSON.parse(localStorage.getItem('expenses')) : [];
 
 function App() {
 
